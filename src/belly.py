@@ -11,8 +11,14 @@ class Belly:
         self.tiempo_esperado = 0
 
     def comer(self, pepinos):
-        print(f"He comido {pepinos} pepinos.")
-        self.pepinos_comidos += pepinos
+        if isinstance(pepinos, int) or isinstance(pepinos, float):
+            if pepinos < 0:
+                raise ValueError(f"Valor erroneo: {pepinos}")
+            else:
+                print(f"He comido {pepinos} pepinos.")
+                self.pepinos_comidos += pepinos
+        else:
+            raise ValueError(f"Valor erroneo: {pepinos}")
 
     def esperar(self, tiempo_en_horas):
         if tiempo_en_horas > 0:

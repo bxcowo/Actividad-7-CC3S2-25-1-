@@ -1,6 +1,33 @@
 from behave import given, when, then
 import re
 
+from behave.matchers import register_type
+
+# Definimos tipo de valor para aceptar pepinillos enteros y fraccionarios
+def value_number(text):
+    try:
+        if '.' not in text:
+            result = int(text)
+            if result >= 0:
+                return int(text)
+            else:
+                raise ValueError
+        else:
+            result = float(text)
+            if result >= 0:
+                return float(text)
+            else:
+                raise ValueError
+    except ValueError:
+        print(f"""
+=====================================================================
+================== ERROR: Valor erróneo --> {text} =====================
+=====================================================================
+            """)
+        return None
+
+register_type(Num=value_number)
+
 # Función para convertir palabras numéricas a números
 def convertir_palabra_a_numero(palabra):
     try:
@@ -16,7 +43,7 @@ def convertir_palabra_a_numero(palabra):
         }
         return numeros.get(palabra.lower(), 0)
 
-@given('que he comido {cukes:d} pepinos')
+@given('que he comido {cukes:Num} pepinos')
 def step_given_eaten_cukes(context, cukes):
     context.belly.comer(cukes)
 
