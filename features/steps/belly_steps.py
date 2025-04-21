@@ -24,24 +24,27 @@ def step_given_eaten_cukes(context, cukes):
 def step_when_wait_time_description(context, time_description):
     time_description = time_description.strip('"').lower()
     time_description = time_description.replace('y', ' ')
+    time_description = time_description.replace(',', ' ')
     time_description = time_description.strip()
 
     # Manejar casos especiales como 'media hora'
     if time_description == 'media hora':
         total_time_in_hours = 0.5
     else:
-        # Expresión regular para extraer horas y minutos
-        pattern = re.compile(r'(?:(\w+)\s*horas?)?\s*(?:(\w+)\s*minutos?)?')
+        # Expresión regular para extraer horas, minutos y segundos
+        pattern = re.compile(r'(?:(\w+)\s*horas?)?\s*(?:(\w+)\s*minutos?)?\s*(?:(\w+)\s*segundos?)?')
         match = pattern.match(time_description)
 
         if match:
             hours_word = match.group(1) or "0"
             minutes_word = match.group(2) or "0"
+            seconds_word = match.group(3) or "0"
 
             hours = convertir_palabra_a_numero(hours_word)
             minutes = convertir_palabra_a_numero(minutes_word)
+            seconds = convertir_palabra_a_numero(seconds_word)
 
-            total_time_in_hours = hours + (minutes / 60)
+            total_time_in_hours = hours + (minutes / 60) + (seconds / 3600)
         else:
             raise ValueError(f"No se pudo interpretar la descripción del tiempo: {time_description}")
 
